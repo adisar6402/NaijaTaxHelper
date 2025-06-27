@@ -1,0 +1,71 @@
+FINAL POLISH PROMPT FOR REPLIT AI (with correct profile links)
+kotlin
+Copy
+Edit
+Please complete the final enhancements to NaijaTaxAssist for official demo readiness.
+
+✅ 1. Homepage Banner  
+Add this banner just below the hero section using Tailwind styling:
+```jsx
+<div className="bg-green-100 text-center py-3 px-4 rounded-md shadow-md mb-6 mx-4">
+  <p className="text-green-900 font-semibold text-sm md:text-base">
+    Proudly built by Abdulrahman Adisa Amuda for Nigeria’s digital public infrastructure 🇳🇬
+  </p>
+</div>
+✅ 2. Footer Enhancements
+Next to “Built by Abdulrahman Adisa Amuda 🇳🇬”, add my correct LinkedIn and GitHub profiles:
+
+jsx
+Copy
+Edit
+<span className="inline-flex items-center gap-2">
+  Built by <strong>Abdulrahman Adisa Amuda</strong> 🇳🇬
+  <a href="https://www.linkedin.com/in/abdulrahman--engineering-ai-ml/" target="_blank" rel="noopener noreferrer">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" className="w-4 h-4 inline" />
+  </a>
+  <a href="https://github.com/adisar6402" target="_blank" rel="noopener noreferrer">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub" className="w-4 h-4 inline" />
+  </a>
+</span>
+✅ 3. Green Heart Emoji
+Change the 💖 emoji (if any) to 💚 to match the Nigerian flag colors.
+
+✅ 4. Language Notice in Footer
+Add this under the language switcher or somewhere in the footer:
+
+“Now supporting 5 languages: English, Yoruba, Hausa, Igbo, and Pidgin.”
+
+✅ 5. Multi-Language System Fix
+The language toggle isn’t working yet. Please:
+
+Load translation files for:
+
+yo (Yoruba)
+
+ha (Hausa)
+
+ig (Igbo)
+
+pcm (Pidgin)
+
+Each should include translations for:
+
+Home
+
+Eligibility Checker
+
+PAYE Calculator
+
+VAT-Free Items
+
+Remote Work Guide
+
+Download Letters
+
+Tax Reform Description
+
+If full translations aren’t ready, just use demo content that visibly switches per language for now.
+
+✅ 6. (Optional) Add small flag icons or style enhancements to the language dropdown for better UX.
+
+Let me know when this is fully implemented so I can test all features again.

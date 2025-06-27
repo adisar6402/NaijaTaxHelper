@@ -1,4 +1,8 @@
+import { useTranslation } from "@/lib/translation-context";
+
 export default function Hero() {
+  const { t } = useTranslation();
+  
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -11,13 +15,11 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center fade-in">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
-            Navigate Nigeria's<br />
-            <span className="text-green-200 inline-block slide-up" style={{animationDelay: '0.3s'}}>2025 Tax Reforms</span>
+            {t.hero.title1}<br />
+            <span className="text-green-200 inline-block slide-up" style={{animationDelay: '0.3s'}}>{t.hero.title2}</span>
           </h1>
           <p className="text-xl md:text-2xl lg:text-3xl mb-10 text-green-100 max-w-4xl mx-auto leading-relaxed slide-up" style={{animationDelay: '0.5s'}}>
-            Free tools to check your tax exemptions, calculate savings, and generate official letters. 
-            <br className="hidden md:block" />
-            <span className="font-semibold">Built for everyday Nigerians.</span>
+            {t.hero.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center slide-up" style={{animationDelay: '0.7s'}}>
             <button
@@ -27,7 +29,7 @@ export default function Hero() {
               <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              Check My Eligibility
+              {t.hero.checkEligibility}
             </button>
             <button
               onClick={() => scrollToSection('calculator')}
@@ -36,7 +38,7 @@ export default function Hero() {
               <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
               </svg>
-              Calculate Savings
+              {t.hero.calculateSavings}
             </button>
           </div>
           

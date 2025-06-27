@@ -3,11 +3,13 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Globe } from "lucide-react";
+import { useTranslation } from "@/lib/translation-context";
+import { languages } from "@/lib/translations";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [location] = useLocation();
-  const [language, setLanguage] = useState("en");
+  const { language, setLanguage, t } = useTranslation();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -18,12 +20,12 @@ export default function Navigation() {
   };
 
   const navLinks = [
-    { href: "#home", label: "Home", id: "home" },
-    { href: "#checker", label: "Eligibility Checker", id: "checker" },
-    { href: "#calculator", label: "PAYE Calculator", id: "calculator" },
-    { href: "#letters", label: "Tax Letters", id: "letters" },
-    { href: "#vat-free", label: "VAT-Free Items", id: "vat-free" },
-    { href: "#remote-guide", label: "Remote Work", id: "remote-guide" },
+    { href: "#home", label: t.nav.home, id: "home" },
+    { href: "#checker", label: t.nav.checker, id: "checker" },
+    { href: "#calculator", label: t.nav.calculator, id: "calculator" },
+    { href: "#letters", label: t.nav.letters, id: "letters" },
+    { href: "#vat-free", label: t.nav.vatFree, id: "vat-free" },
+    { href: "#remote-guide", label: t.nav.remoteGuide, id: "remote-guide" },
   ];
 
   return (
@@ -58,15 +60,18 @@ export default function Navigation() {
               <div className="flex items-center space-x-2">
                 <Globe className="w-4 h-4 text-gray-500" />
                 <Select value={language} onValueChange={setLanguage}>
-                  <SelectTrigger className="w-24 h-8 text-xs">
+                  <SelectTrigger className="w-28 h-8 text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="yo">Yoruba</SelectItem>
-                    <SelectItem value="ha">Hausa</SelectItem>
-                    <SelectItem value="ig">Igbo</SelectItem>
-                    <SelectItem value="pi">Pidgin</SelectItem>
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        <div className="flex items-center space-x-2">
+                          <span>{lang.flag}</span>
+                          <span>{lang.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -106,15 +111,18 @@ export default function Navigation() {
             <div className="flex items-center space-x-2 px-3 py-2">
               <Globe className="w-4 h-4 text-gray-500" />
               <Select value={language} onValueChange={setLanguage}>
-                <SelectTrigger className="w-32 h-8 text-sm">
+                <SelectTrigger className="w-36 h-8 text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="yo">Yoruba</SelectItem>
-                  <SelectItem value="ha">Hausa</SelectItem>
-                  <SelectItem value="ig">Igbo</SelectItem>
-                  <SelectItem value="pi">Pidgin</SelectItem>
+                  {languages.map((lang) => (
+                    <SelectItem key={lang.code} value={lang.code}>
+                      <div className="flex items-center space-x-2">
+                        <span>{lang.flag}</span>
+                        <span>{lang.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

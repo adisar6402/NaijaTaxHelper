@@ -13,6 +13,13 @@ export default function Home() {
       <Navigation />
       <Hero />
       
+      {/* Homepage Banner */}
+      <div className="bg-green-100 text-center py-3 px-4 rounded-md shadow-md mb-6 mx-4">
+        <p className="text-green-900 font-semibold text-sm md:text-base">
+          Proudly built by Abdulrahman Adisa Amuda for Nigeria's digital public infrastructure 🇳🇬
+        </p>
+      </div>
+      
       {/* Key Benefits */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
