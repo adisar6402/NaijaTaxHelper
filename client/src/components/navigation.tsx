@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Globe } from "lucide-react";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [location] = useLocation();
+  const [language, setLanguage] = useState("en");
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -37,16 +41,35 @@ export default function Navigation() {
           
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {navLinks.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => scrollToSection(link.id)}
-                  className="nav-link px-3 py-2 text-sm font-medium text-gray-600 hover:text-[var(--nigeria-green)] transition-colors"
-                >
-                  {link.label}
-                </button>
-              ))}
+            <div className="ml-10 flex items-center space-x-4">
+              <div className="flex items-baseline space-x-4">
+                {navLinks.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => scrollToSection(link.id)}
+                    className="nav-link px-3 py-2 text-sm font-medium text-gray-600 hover:text-[var(--nigeria-green)] transition-colors"
+                  >
+                    {link.label}
+                  </button>
+                ))}
+              </div>
+              
+              {/* Language Selector */}
+              <div className="flex items-center space-x-2">
+                <Globe className="w-4 h-4 text-gray-500" />
+                <Select value={language} onValueChange={setLanguage}>
+                  <SelectTrigger className="w-24 h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="yo">Yoruba</SelectItem>
+                    <SelectItem value="ha">Hausa</SelectItem>
+                    <SelectItem value="ig">Igbo</SelectItem>
+                    <SelectItem value="pi">Pidgin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
           
@@ -78,6 +101,23 @@ export default function Navigation() {
                 {link.label}
               </button>
             ))}
+            
+            {/* Mobile Language Selector */}
+            <div className="flex items-center space-x-2 px-3 py-2">
+              <Globe className="w-4 h-4 text-gray-500" />
+              <Select value={language} onValueChange={setLanguage}>
+                <SelectTrigger className="w-32 h-8 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="yo">Yoruba</SelectItem>
+                  <SelectItem value="ha">Hausa</SelectItem>
+                  <SelectItem value="ig">Igbo</SelectItem>
+                  <SelectItem value="pi">Pidgin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       )}

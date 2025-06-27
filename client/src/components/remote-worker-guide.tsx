@@ -12,6 +12,42 @@ export default function RemoteWorkerGuide() {
         
         <Card className="card-shadow">
           <CardContent className="p-8">
+            {/* Remote Worker Illustration */}
+            <div className="text-center mb-8">
+              <div className="inline-block p-6 bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl">
+                <svg className="w-32 h-32 mx-auto" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Laptop */}
+                  <rect x="50" y="120" width="100" height="60" rx="4" fill="#374151" />
+                  <rect x="55" y="125" width="90" height="50" rx="2" fill="#1f2937" />
+                  <rect x="60" y="130" width="80" height="40" rx="2" fill="#059669" opacity="0.8" />
+                  
+                  {/* Person */}
+                  <circle cx="100" cy="80" r="20" fill="#fbbf24" />
+                  <rect x="85" y="100" width="30" height="40" rx="15" fill="#3b82f6" />
+                  
+                  {/* Arms */}
+                  <rect x="70" y="110" width="15" height="25" rx="7" fill="#fbbf24" />
+                  <rect x="115" y="110" width="15" height="25" rx="7" fill="#fbbf24" />
+                  
+                  {/* WiFi Symbol */}
+                  <path d="M30 50 Q50 30 70 50" stroke="#059669" strokeWidth="3" fill="none" />
+                  <path d="M35 55 Q50 45 65 55" stroke="#059669" strokeWidth="2" fill="none" />
+                  <circle cx="50" cy="60" r="2" fill="#059669" />
+                  
+                  {/* Dollar Signs */}
+                  <text x="130" y="45" fontSize="16" fill="#059669" fontWeight="bold">$</text>
+                  <text x="145" y="35" fontSize="14" fill="#10b981" fontWeight="bold">₦</text>
+                  <text x="160" y="50" fontSize="12" fill="#34d399" fontWeight="bold">€</text>
+                  
+                  {/* Nigeria Flag Colors */}
+                  <rect x="20" y="20" width="8" height="12" fill="#008751" />
+                  <rect x="28" y="20" width="8" height="12" fill="white" />
+                  <rect x="36" y="20" width="8" height="12" fill="#008751" />
+                </svg>
+              </div>
+              <p className="text-sm text-gray-500 mt-2 italic">Digital Nomad • Remote Worker • Global Income</p>
+            </div>
+            
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <div className="space-y-4 mb-6">

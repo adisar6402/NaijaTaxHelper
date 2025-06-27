@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
   --background: hsl(0, 0%, 100%);
@@ -68,36 +68,70 @@
 @layer components {
   .hero-gradient {
     background: linear-gradient(135deg, var(--nigeria-green) 0%, var(--nigeria-light-green) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hero-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1.5" fill="white" opacity="0.1"/><circle cx="40" cy="80" r="1" fill="white" opacity="0.1"/><circle cx="70" cy="70" r="1.5" fill="white" opacity="0.1"/></svg>');
+    animation: float 20s ease-in-out infinite;
   }
   
   .card-shadow {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
   }
   
   .card-hover {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
   
   .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
   
   .btn-primary {
     background: linear-gradient(135deg, var(--nigeria-green) 0%, var(--nigeria-light-green) 100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px 0 rgba(0, 135, 81, 0.3);
   }
   
   .btn-primary:hover {
     background: linear-gradient(135deg, hsl(144, 100%, 21%) 0%, hsl(150, 86%, 44%) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(0, 135, 81, 0.4);
   }
   
   .fade-in {
-    animation: fadeIn 0.6s ease-in-out;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.8s ease-out;
   }
   
   .nav-link.active {
     color: var(--nigeria-green);
     border-bottom: 2px solid var(--nigeria-green);
+  }
+  
+  .pulse-green {
+    animation: pulseGreen 2s ease-in-out infinite;
+  }
+  
+  .feature-icon {
+    transition: all 0.3s ease;
+  }
+  
+  .feature-icon:hover {
+    transform: scale(1.1) rotate(5deg);
   }
 }
 
@@ -109,6 +143,35 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseGreen {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 135, 81, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 135, 81, 0);
   }
 }
 
