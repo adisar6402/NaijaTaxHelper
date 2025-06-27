@@ -1,0 +1,99 @@
+Build a real, production-grade full-stack Progressive Web App (PWA) called **NaijaTaxAssist**. This app helps Nigerians understand and access the new 2025 tax reforms through tools like tax relief checkers, PDF letter generators, and VAT-free item guidance. It must be functional, polished, and free to use — built using zero-cost tools only.
+
+🔹 MAIN GOAL:
+Make tax reforms understandable and actionable to everyday Nigerians: low-income earners, remote workers, landlords, SMEs.
+
+---
+
+🔧 TECH STACK (Zero-Cost Only):
+* **Frontend:** React + Tailwind CSS (UI polish is critical)
+* **Backend:** Flask (Python) or Node.js (if easier)
+* **PDF:** html2pdf.js or jsPDF (for downloadable letters)
+* **Database:** JSON files or SQLite (for static data like VAT-free items)
+* **Deployment:** Netlify (frontend), Replit Flask server (backend)
+* **PWA:** Service Worker + manifest.json for offline install support
+
+---
+
+🧩 FEATURES TO IMPLEMENT:
+
+1. ✅ **Eligibility Checker**  
+   - User inputs: income, rent, job type, remote work status  
+   - Returns: exemption status for PAYE, stamp duty, VAT  
+   - Logic example: income ≤ ₦1,000,000/year → exempt from PAYE
+
+2. 🧾 **Downloadable PDF Letter Generator**  
+   - Generates formal exemption letters based on user's data  
+   - Options: for employer (PAYE), for landlord (stamp duty exemption)  
+   - Make it downloadable instantly (use html2pdf.js)
+
+3. 📊 **PAYE Savings Calculator**  
+   - User inputs monthly salary  
+   - Output: total tax savings yearly  
+   - Example: ₦120,000 saved/year if below threshold
+
+4. 🛒 **VAT-Free Items List**  
+   - Display searchable, categorized list of exempted items  
+   - Categories: Food, Baby Items, Education, Electricity, Healthcare
+
+5. 🌍 **Remote Worker/Digital Nomad Guide**  
+   - Static page with simplified tax tips for freelancers & tech workers  
+   - Localized to Nigeria (mention Dollar earners, BVN, etc.)
+
+6. 📲 **Installable PWA Support**  
+   - App manifest.json  
+   - Offline access and “Add to Home Screen” support  
+   - Optimized for mobile-first experience
+
+7. 🖥️ **Admin Dashboard (Optional)**  
+   - Show anonymous usage stats (number of users, exemptions checked, letters generated)
+
+---
+
+🎨 UI/UX MUST BE TOP-NOTCH:
+
+* Use TailwindCSS and Heroicons
+* Colors: Nigeria-themed (green, white, soft gray backgrounds)
+* Clear navigation bar with logo & pages
+* Mobile-first responsive layout
+* Smooth animations and transitions
+* Add icons to buttons: e.g., download, check, info
+
+📌 Example Navigation:
+* Home
+* Eligibility Checker
+* PAYE Calculator
+* Download Tax Letter
+* VAT-Free Goods
+* Remote Work Tax Guide
+* About the Reform
+
+---
+
+📦 DATA TO EMBED:
+* PAYE exemption threshold: ₦1,000,000/year
+* Stamp duty threshold: ₦10,000,000/year rent
+* VAT-free items list (embed a static JSON)
+* Tax letter templates (basic HTML with placeholders)
+
+---
+
+🧠 AFTER YOU BUILD IT, PLEASE ALSO:
+
+* 💄 Polish the UI with Tailwind themes and smooth UX
+* 💾 Make the PDF letter feature fully downloadable
+* 🔌 Connect frontend inputs to backend logic properly
+* 🧪 Help me test all features live (in-browser, no login required)
+* 📱 Ensure PWA support is working across devices
+
+This is a real app, not a demo. It must work, look professional, and be impressive enough to pitch to Nigerian government officials (FIRS, Ministry of Finance, PEBEC).
+
+Make the full code modular and clean. All code should run on free tier of Replit or exportable to Netlify + backend.
+
+Start building now.
+
+Also, make sure to:
+
+✍️ Add the developer’s name “Abdulrahman Adisa Amuda” in the footer of the site (e.g., “Built by Abdulrahman Adisa Amuda 🇳🇬”)
+
+📟 Log the same name in the browser console when the app loads
