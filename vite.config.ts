@@ -1,12 +1,14 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+
+// Optional: Remove Replit's runtime error overlay
+// import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
+    // runtimeErrorOverlay(), // ❌ Disabled to fix "dispatcher is null"
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
@@ -32,6 +34,12 @@ export default defineConfig({
     fs: {
       strict: true,
       deny: ["**/.*"],
+    },
+    hmr: {
+      overlay: false, // ✅ Disable Vite's crash overlay popup
+    },
+    proxy: {
+      "/api": "http://localhost:5000", // ✅ Add this line to fix API 404
     },
   },
 });

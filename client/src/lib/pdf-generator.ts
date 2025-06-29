@@ -1,4 +1,5 @@
-declare const html2pdf: any;
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 interface EmployerLetterData {
   employeeName: string;
@@ -14,177 +15,141 @@ interface LandlordLetterData {
   annualRent?: string;
 }
 
+const downloadPdf = async (html: string, filename: string) => {
+  const container = document.createElement("div");
+  container.innerHTML = html;
+  container.style.position = "absolute";
+  container.style.left = "-9999px";
+  container.style.top = "0";
+  container.style.background = "#fff";
+  container.style.minHeight = "1200px"; // ensures space for footer
+
+  document.body.appendChild(container);
+
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
+  const canvas = await html2canvas(container, { scale: 2 });
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "pt", "a4");
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const imgProps = pdf.getImageProperties(imgData);
+  const ratio = imgProps.width / imgProps.height;
+  const pdfHeight = pageWidth / ratio;
+
+  pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
+  pdf.save(filename);
+
+  document.body.removeChild(container);
+};
+
 export const generateEmployerLetter = (data: EmployerLetterData) => {
-  const currentDate = new Date().toLocaleDateString('en-GB');
-  
+  const currentDate = new Date().toLocaleDateString("en-GB");
+  const filename = `PAYE_Exemption_Letter_${data.employeeName.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
+
   const letterHTML = `
-    <div style="font-family: 'Times New Roman', serif; max-width: 800px; margin: 0 auto; padding: 40px; line-height: 1.8; color: #000;">
-      <!-- Government Style Header -->
+    <div style="font-family: 'Times New Roman', serif; max-width: 800px; margin: 40px auto; padding: 40px; padding-bottom: 100px; min-height: 1200px; line-height: 1.8; color: #000; font-size: 14px; background: #fff;">
       <div style="text-align: center; margin-bottom: 40px; border-bottom: 3px solid #008751; padding-bottom: 20px;">
-        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-          <div style="width: 80px; height: 80px; background: #008751; border-radius: 50%; color: white; font-size: 40px; font-weight: bold; line-height: 80px; margin-right: 20px;">₦</div>
-          <div style="text-align: left;">
-            <h1 style="color: #008751; margin: 0; font-size: 24px; font-weight: bold;">FEDERAL REPUBLIC OF NIGERIA</h1>
-            <h2 style="color: #333; margin: 5px 0; font-size: 18px;">MINISTRY OF FINANCE</h2>
-            <p style="color: #666; margin: 0; font-size: 14px;">Tax Reform Implementation Unit</p>
-          </div>
-        </div>
-        <h3 style="color: #008751; margin: 10px 0 0 0; font-size: 16px; font-weight: normal;">Official Tax Exemption Notification</h3>
+        <h1 style="color: #008751;">FEDERAL REPUBLIC OF NIGERIA</h1>
+        <h2 style="color: #333;">MINISTRY OF FINANCE</h2>
+        <p style="color: #666;">Tax Reform Implementation Unit</p>
+        <h3 style="color: #008751; margin-top: 20px;">Official Tax Exemption Notification</h3>
       </div>
-      
-      <div style="margin-bottom: 30px;">
-        <p><strong>Date:</strong> ${currentDate}</p>
-        <p><strong>To:</strong> ${data.hrManager || 'HR Manager'}</p>
-        <p><strong>Company:</strong> ${data.companyName}</p>
-        <p><strong>From:</strong> ${data.employeeName}</p>
-        ${data.employeeId ? `<p><strong>Employee ID:</strong> ${data.employeeId}</p>` : ''}
-      </div>
-      
-      <h2 style="color: #008751;">RE: PAYE TAX EXEMPTION NOTIFICATION - NIGERIA TAX REFORM 2025</h2>
-      
-      <p>Dear ${data.hrManager || 'HR Manager'},</p>
-      
-      <p>I am writing to formally notify you of my tax exemption status under the new Nigeria Tax Reform Act 2025, which came into effect on January 1, 2025.</p>
-      
-      <p><strong>Key Information:</strong></p>
+
+      <p><strong>Date:</strong> ${currentDate}</p>
+      <p><strong>To:</strong> ${data.hrManager || "HR Manager"}</p>
+      <p><strong>Company:</strong> ${data.companyName}</p>
+      <p><strong>From:</strong> ${data.employeeName}</p>
+      ${data.employeeId ? `<p><strong>Employee ID:</strong> ${data.employeeId}</p>` : ""}
+
+      <h3 style="color: #008751;">RE: PAYE TAX EXEMPTION NOTIFICATION - NIGERIA TAX REFORM 2025</h3>
+
+      <p>Dear ${data.hrManager || "HR Manager"},</p>
+      <p>I am writing to notify you of my tax exemption status under the Nigeria Tax Reform Act 2025.</p>
+
       <ul>
-        <li>Under the new tax reforms, individuals earning ₦1,000,000 or less annually are exempt from Pay As You Earn (PAYE) tax</li>
-        <li>This exemption applies to the total annual gross salary including allowances</li>
-        <li>The reform aims to provide relief to low and middle-income earners</li>
+        <li>Individuals earning ₦1,000,000 or less annually are exempt from PAYE tax.</li>
+        <li>This applies to gross salary including allowances.</li>
+        <li>Intended to support low and middle-income earners.</li>
       </ul>
-      
+
       <p><strong>Request:</strong></p>
-      <p>Based on my current annual salary, I qualify for this exemption. I kindly request that you:</p>
       <ol>
-        <li>Update my payroll records to reflect this tax exemption status</li>
-        <li>Cease deducting PAYE tax from my salary effective immediately</li>
-        <li>Provide written confirmation of this adjustment</li>
+        <li>Update payroll records to reflect tax exemption.</li>
+        <li>Cease PAYE tax deductions immediately.</li>
+        <li>Provide written confirmation of this change.</li>
       </ol>
-      
-      <div style="background: #f8f9fa; padding: 20px; border-left: 4px solid #008751; margin: 20px 0;">
-        <p style="margin: 0; font-weight: bold; color: #008751;">Legal Reference:</p>
-        <p style="margin: 5px 0 0 0;">This exemption is provided under Section 3 of the Nigeria Tax Reform Act 2025, as published by the Federal Inland Revenue Service (FIRS) and gazetted by the Federal Government of Nigeria.</p>
+
+      <div style="border-left: 4px solid #008751; padding-left: 10px; background: #f8f9fa;">
+        <p><strong>Legal Reference:</strong></p>
+        <p>This exemption is provided under Section 3 of the Nigeria Tax Reform Act 2025 by the FIRS.</p>
       </div>
-      
-      <p>I have attached relevant documentation and am available to discuss this matter further if needed. Thank you for your prompt attention to this matter.</p>
-      
-      <div style="margin-top: 40px;">
-        <p>Yours faithfully,</p>
-        <div style="margin-top: 30px; border-bottom: 2px solid #000; width: 300px;"></div>
-        <p style="margin-top: 10px;"><strong>${data.employeeName}</strong></p>
-        <p style="margin: 0; color: #666;">Employee</p>
-      </div>
-      
-      <div style="margin-top: 50px; padding-top: 20px; border-top: 2px solid #008751;">
-        <div style="font-size: 11px; color: #666; text-align: center;">
-          <p style="margin: 5px 0;">This official letter was generated by NaijaTaxAssist - Nigeria Tax Reform 2025 Implementation Tool</p>
-          <p style="margin: 5px 0;">Developed by Abdulrahman Adisa Amuda 🇳🇬 | For verification, visit: www.naijatuaxassist.com</p>
-          <p style="margin: 5px 0; font-style: italic;">"Making Tax Reforms Accessible to Every Nigerian"</p>
-        </div>
+
+      <p>Thank you for your prompt attention to this matter.</p>
+
+      <p style="margin-top: 40px;">Yours faithfully,</p>
+      <p style="margin-top: 30px;"><strong>${data.employeeName}</strong><br>Employee</p>
+
+      <div style="font-size: 10px; text-align: center; margin-top: 60px; border-top: 1px solid #ccc; padding-top: 10px;">
+        Generated by <strong>NaijaTaxAssist</strong><br>
+        Developed by <strong>Abdulrahman Adisa Amuda 🇳🇬</strong><br>
+        <a href="https://www.naijataxassist.com" style="color:#008751;">www.naijataxassist.com</a><br>
+        <em>"Making Tax Reforms Accessible to Every Nigerian"</em>
       </div>
     </div>
   `;
 
-  const element = document.createElement('div');
-  element.innerHTML = letterHTML;
-  
-  const opt = {
-    margin: 0.5,
-    filename: `PAYE_Exemption_Letter_${data.employeeName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-  };
-
-  html2pdf().set(opt).from(element).save();
+  downloadPdf(letterHTML, filename);
 };
 
 export const generateLandlordLetter = (data: LandlordLetterData) => {
-  const currentDate = new Date().toLocaleDateString('en-GB');
-  
+  const currentDate = new Date().toLocaleDateString("en-GB");
+  const filename = `Stamp_Duty_Exemption_Letter_${data.tenantName.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
+
   const letterHTML = `
-    <div style="font-family: 'Times New Roman', serif; max-width: 800px; margin: 0 auto; padding: 40px; line-height: 1.8; color: #000;">
-      <!-- Government Style Header -->
+    <div style="font-family: 'Times New Roman', serif; max-width: 800px; margin: 40px auto; padding: 40px; line-height: 1.8; color: #000; font-size: 14px; background: #fff;">
       <div style="text-align: center; margin-bottom: 40px; border-bottom: 3px solid #008751; padding-bottom: 20px;">
-        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-          <div style="width: 80px; height: 80px; background: #008751; border-radius: 50%; color: white; font-size: 40px; font-weight: bold; line-height: 80px; margin-right: 20px;">₦</div>
-          <div style="text-align: left;">
-            <h1 style="color: #008751; margin: 0; font-size: 24px; font-weight: bold;">FEDERAL REPUBLIC OF NIGERIA</h1>
-            <h2 style="color: #333; margin: 5px 0; font-size: 18px;">MINISTRY OF FINANCE</h2>
-            <p style="color: #666; margin: 0; font-size: 14px;">Tax Reform Implementation Unit</p>
-          </div>
-        </div>
-        <h3 style="color: #008751; margin: 10px 0 0 0; font-size: 16px; font-weight: normal;">Official Stamp Duty Exemption Notification</h3>
+        <h1 style="color: #008751;">FEDERAL REPUBLIC OF NIGERIA</h1>
+        <h2 style="color: #333;">MINISTRY OF FINANCE</h2>
+        <p style="color: #666;">Tax Reform Implementation Unit</p>
+        <h3 style="color: #008751; margin-top: 20px;">Stamp Duty Exemption Notification</h3>
       </div>
-      
-      <div style="margin-bottom: 30px;">
-        <p><strong>Date:</strong> ${currentDate}</p>
-        <p><strong>To:</strong> ${data.landlordName}</p>
-        ${data.propertyAddress ? `<p><strong>Property:</strong> ${data.propertyAddress}</p>` : ''}
-        <p><strong>From:</strong> ${data.tenantName}</p>
-      </div>
-      
-      <h2 style="color: #008751;">RE: STAMP DUTY EXEMPTION NOTIFICATION - NIGERIA TAX REFORM 2025</h2>
-      
+
+      <p><strong>Date:</strong> ${currentDate}</p>
+      <p><strong>To:</strong> ${data.landlordName}</p>
+      <p><strong>From:</strong> ${data.tenantName}</p>
+      ${data.propertyAddress ? `<p><strong>Property Address:</strong> ${data.propertyAddress}</p>` : ""}
+      ${data.annualRent ? `<p><strong>Annual Rent:</strong> ₦${parseFloat(data.annualRent).toLocaleString()}</p>` : ""}
+
+      <h3 style="color: #008751;">RE: STAMP DUTY EXEMPTION - NIGERIA TAX REFORM 2025</h3>
+
       <p>Dear ${data.landlordName},</p>
-      
-      <p>I am writing to inform you about the stamp duty exemption provisions under the new Nigeria Tax Reform Act 2025, which affects our tenancy agreement.</p>
-      
-      <p><strong>Key Information:</strong></p>
+      <p>I am writing to inform you that our tenancy agreement qualifies for stamp duty exemption under the new reform.</p>
+
       <ul>
-        <li>Under the new tax reforms, tenancy agreements with annual rent of ₦10,000,000 or less are exempt from stamp duty</li>
-        <li>This exemption applies to residential property rentals</li>
-        <li>The reform aims to reduce the cost of housing for average income earners</li>
+        <li>Rent ₦10,000,000 or less annually = Exempt from stamp duty</li>
+        <li>Applies to residential properties</li>
+        <li>Helps reduce housing costs</li>
       </ul>
-      
-      ${data.annualRent ? `<p><strong>Current Rental Details:</strong></p>
-      <p>Annual Rent: ₦${parseFloat(data.annualRent).toLocaleString()}</p>
-      <p>Based on the annual rent amount, this tenancy qualifies for stamp duty exemption.</p>` : ''}
-      
-      <p><strong>Legal Implication:</strong></p>
-      <p>This means that:</p>
-      <ol>
-        <li>No stamp duty is required to be paid on our tenancy agreement</li>
-        <li>The agreement remains legally valid without stamp duty payment</li>
-        <li>Both parties benefit from reduced transaction costs</li>
-      </ol>
-      
-      <div style="background: #f8f9fa; padding: 20px; border-left: 4px solid #008751; margin: 20px 0;">
-        <p style="margin: 0; font-weight: bold; color: #008751;">Legal Reference:</p>
-        <p style="margin: 5px 0 0 0;">This exemption is provided under Section 5 of the Nigeria Tax Reform Act 2025, as published by the Federal Inland Revenue Service (FIRS) and gazetted by the Federal Government of Nigeria.</p>
+
+      <div style="border-left: 4px solid #008751; padding-left: 10px; background: #f8f9fa;">
+        <p><strong>Legal Reference:</strong></p>
+        <p>Section 5 of the Nigeria Tax Reform Act 2025 by FIRS</p>
       </div>
-      
-      <p>I wanted to bring this to your attention for your records and future reference. This does not affect any other terms of our tenancy agreement.</p>
-      
-      <p>Thank you for your understanding and cooperation in implementing these new tax reforms.</p>
-      
-      <div style="margin-top: 40px;">
-        <p>Yours respectfully,</p>
-        <div style="margin-top: 30px; border-bottom: 2px solid #000; width: 300px;"></div>
-        <p style="margin-top: 10px;"><strong>${data.tenantName}</strong></p>
-        <p style="margin: 0; color: #666;">Tenant</p>
-      </div>
-      
-      <div style="margin-top: 50px; padding-top: 20px; border-top: 2px solid #008751;">
-        <div style="font-size: 11px; color: #666; text-align: center;">
-          <p style="margin: 5px 0;">This official letter was generated by NaijaTaxAssist - Nigeria Tax Reform 2025 Implementation Tool</p>
-          <p style="margin: 5px 0;">Developed by Abdulrahman Adisa Amuda 🇳🇬 | For verification, visit: www.naijatuaxassist.com</p>
-          <p style="margin: 5px 0; font-style: italic;">"Making Tax Reforms Accessible to Every Nigerian"</p>
-        </div>
+
+      <p>This does not affect other tenancy terms.</p>
+
+      <p style="margin-top: 40px;">Yours respectfully,</p>
+      <p style="margin-top: 30px;"><strong>${data.tenantName}</strong><br>Tenant</p>
+
+      <div style="font-size: 10px; text-align: center; margin-top: 60px; border-top: 1px solid #ccc; padding-top: 10px;">
+        Generated by <strong>NaijaTaxAssist</strong><br>
+        Developed by <strong>Abdulrahman Adisa Amuda 🇳🇬</strong><br>
+        <a href="https://www.naijataxassist.com" style="color:#008751;">www.naijataxassist.com</a><br>
+        <em>"Making Tax Reforms Accessible to Every Nigerian"</em>
       </div>
     </div>
   `;
 
-  const element = document.createElement('div');
-  element.innerHTML = letterHTML;
-  
-  const opt = {
-    margin: 0.5,
-    filename: `Stamp_Duty_Exemption_Letter_${data.tenantName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-  };
-
-  html2pdf().set(opt).from(element).save();
+  downloadPdf(letterHTML, filename);
 };

@@ -1,11 +1,19 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import express, { Request, Response, NextFunction } from "express";
+import { createServer } from "http";
+import { setupVite, serveStatic } from "./vite";
+import { contactHandler } from "./contactHandler";
+import { registerRoutes } from "./routes"; // ✅ ADD THIS
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
+const httpServer = createServer(app);
+
+// ✅ Needed to parse JSON and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// ✅ Logging Middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -24,47 +32,31 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "…";
       }
-
-      log(logLine);
+      console.log(logLine);
     }
   });
 
   next();
 });
 
+// ✅ Register ALL API routes
 (async () => {
-  const server = await registerRoutes(app);
+  await registerRoutes(app); // ✅ Register backend logic
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
-  });
-
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    await setupVite(app, server);
+    await setupVite(app, httpServer);
   } else {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  const PORT = 5000;
+  httpServer.listen(PORT, () => {
+    console.log(`✅ Express API server running on http://localhost:${PORT}`);
   });
 })();
+
+// 🔁 This one line can be removed now because `registerRoutes()` already includes the contactHandler route
+// app.post("/api/contact", contactHandler);

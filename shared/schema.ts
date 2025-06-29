@@ -2,6 +2,8 @@ import { pgTable, text, serial, integer, boolean, decimal } from "drizzle-orm/pg
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// ✅ TABLE DEFINITIONS
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -44,12 +46,36 @@ export const usageStats = pgTable("usage_stats", {
   vatSearches: integer("vat_searches").default(0),
 });
 
-export const insertTaxCalculationSchema = createInsertSchema(taxCalculations).omit({
+// ✅ FIXED INSERT SCHEMAS
+
+export const insertTaxCalculationSchema = createInsertSchema(taxCalculations, {
+  annualIncome: z.number().min(0, "Annual income is required"),
+  employmentType: z.enum(["employee", "freelancer", "business_owner", "remote_worker"]),
+  annualRent: z.number().min(0).optional(),
+  location: z.string().min(2),
+  isRemoteWorker: z.boolean().optional(),
+
+  // ✅ Backend-calculated fields should be optional for Zod parsing
+  payeExempt: z.boolean().optional(),
+  stampDutyExempt: z.boolean().optional(),
+  estimatedSavings: z.union([z.string(), z.number()]).optional(),
+
+  sessionId: z.string().min(5),
+}).omit({
   id: true,
   createdAt: true,
 });
 
-export const insertLetterRequestSchema = createInsertSchema(letterRequests).omit({
+export const insertLetterRequestSchema = createInsertSchema(letterRequests, {
+  sessionId: z.string().min(5),
+  letterType: z.enum(["employer", "landlord"]),
+  recipientName: z.string().min(2),
+  applicantName: z.string().min(2),
+  companyName: z.string().optional(),
+  employeeId: z.string().optional(),
+  propertyAddress: z.string().optional(),
+  annualRent: z.number().optional(),
+}).omit({
   id: true,
   createdAt: true,
 });
@@ -57,6 +83,8 @@ export const insertLetterRequestSchema = createInsertSchema(letterRequests).omit
 export const insertUsageStatsSchema = createInsertSchema(usageStats).omit({
   id: true,
 });
+
+// ✅ TYPES
 
 export type InsertTaxCalculation = z.infer<typeof insertTaxCalculationSchema>;
 export type TaxCalculation = typeof taxCalculations.$inferSelect;
@@ -67,10 +95,9 @@ export type LetterRequest = typeof letterRequests.$inferSelect;
 export type InsertUsageStats = z.infer<typeof insertUsageStatsSchema>;
 export type UsageStats = typeof usageStats.$inferSelect;
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
 });
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;

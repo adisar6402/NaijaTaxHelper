@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { vatFreeItems } from "@/data/vat-free-items";
 import { Search, Check } from "lucide-react";
+import ContactModal from "@/components/ContactModal";
 
 export default function VatFreeItems() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -130,13 +131,14 @@ export default function VatFreeItems() {
           </div>
         )}
         
-        <div className="text-center mt-8">
-          <p className="text-gray-600 mb-4">Can't find what you're looking for?</p>
-          <Button className="btn-primary">
-            Contact Support
-          </Button>
-        </div>
-      </div>
-    </section>
-  );
+        {/* Contact Support CTA */}
+<div className="text-center mt-8">
+  <div className="text-gray-600 mb-4 flex justify-center items-center gap-1">
+    <span>Can’t find what you’re looking for?</span>
+    <ContactModal />
+  </div>
+</div>
+</div>
+</section>
+);
 }
