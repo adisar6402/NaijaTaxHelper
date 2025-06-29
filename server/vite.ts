@@ -3,6 +3,7 @@ import type { Express } from "express";
 import { createServer as createViteServer } from "vite";
 import { fileURLToPath } from "url";
 import path from "path";
+import serveStatic from "serve-static"; // ✅ ESM compatible
 
 // ES module dirname fix
 const __filename = fileURLToPath(import.meta.url);
@@ -22,7 +23,7 @@ export async function setupVite(app: Express) {
 
 export function serveStatic(app: Express) {
   const root = path.resolve(__dirname, "..", "client", "dist");
-  app.use(require("serve-static")(root, { index: false }));
+  app.use(serveStatic(root, { index: false }));
   app.use("*", async (_req, res) => {
     res.sendFile(path.join(root, "index.html"));
   });
