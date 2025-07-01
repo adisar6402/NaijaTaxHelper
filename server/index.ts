@@ -3,22 +3,19 @@ import { createServer } from "http";
 import { contactHandler } from "./contactHandler";
 import { registerRoutes } from "./routes";
 import dotenv from "dotenv";
-import { serveStatic } from "./vite";
-
+import { serveStatic } from "./serveStatic"; // ⬅️ NEW FILE
 dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
 
-// Middleware to parse JSON and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined;
+  let capturedJsonResponse;
 
   const originalResJson = res.json;
   res.json = function (bodyJson, ...args) {
@@ -33,9 +30,7 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
+      if (logLine.length > 80) logLine = logLine.slice(0, 79) + "…";
       console.log(logLine);
     }
   });
@@ -46,12 +41,21 @@ app.use((req, res, next) => {
 (async () => {
   await registerRoutes(app);
 
-  const isDev = app.get("env") === "development";
+  if (process.env.NODE_ENV === "development") {
+    const { createServer } = await import("vite");
+    const path = (await import("path")).default;
+    const { fileURLToPath } = await import("url");
 
-  if (isDev) {
-    // ⛔ Avoid bundling Vite in production
-    const { setupVite } = await import("./vite.js");
-    await setupVite(app, httpServer);
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    const vite = await createServer({
+      server: { middlewareMode: true },
+      appType: "custom",
+      root: path.resolve(__dirname, ".."),
+    });
+
+    app.use(vite.middlewares);
   } else {
     serveStatic(app);
   }
