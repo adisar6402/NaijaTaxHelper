@@ -42,8 +42,8 @@ app.use((req, res, next) => {
   await registerRoutes(app);
 
   if (process.env.NODE_ENV === "development") {
-    const { setupVite } = await import("./viteDev.local"); // ✅ Correct dynamic import
-    await setupVite(app);
+    const { setupDevServer } = await import("./devSetup.js"); // ✅ Fixed here
+    await setupDevServer(app);
   } else {
     serveStatic(app);
   }
