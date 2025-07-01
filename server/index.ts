@@ -1,23 +1,24 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import { createServer } from "http";
-import { setupVite, serveStatic } from "./vite";
 import { contactHandler } from "./contactHandler";
-import { registerRoutes } from "./routes"; // ✅ ADD THIS
+import { registerRoutes } from "./routes";
 import dotenv from "dotenv";
+import { serveStatic } from "./vite";
+
 dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
 
-// ✅ Needed to parse JSON and form data
+// Middleware to parse JSON and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ✅ Logging Middleware
+// Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  let capturedJsonResponse: Record<string, any> | undefined;
 
   const originalResJson = res.json;
   res.json = function (bodyJson, ...args) {
@@ -42,21 +43,21 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ Register ALL API routes
 (async () => {
-  await registerRoutes(app); // ✅ Register backend logic
+  await registerRoutes(app);
 
-  if (app.get("env") === "development") {
+  const isDev = app.get("env") === "development";
+
+  if (isDev) {
+    // ⛔ Avoid bundling Vite in production
+    const { setupVite } = await import("./vite.js");
     await setupVite(app, httpServer);
   } else {
     serveStatic(app);
   }
 
-  const PORT = 5000;
+  const PORT = process.env.PORT || 5000;
   httpServer.listen(PORT, () => {
-    console.log(`✅ Express API server running on http://localhost:${PORT}`);
+    console.log(`✅ Express server running on http://localhost:${PORT}`);
   });
 })();
-
-// 🔁 This one line can be removed now because `registerRoutes()` already includes the contactHandler route
-// app.post("/api/contact", contactHandler);
