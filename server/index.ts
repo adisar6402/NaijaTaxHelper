@@ -1,21 +1,23 @@
 import express from "express";
 import { createServer } from "http";
 import dotenv from "dotenv";
-import { registerRoutes } from "./routes";
-import { serveStatic } from "./serveStatic";
+import { registerRoutes } from "./routes.js";
+import { setupStaticFiles } from "./serveStatic.js";
 
 dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
 
+// Middleware to parse incoming requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse;
+  let capturedJsonResponse: any;
 
   const originalResJson = res.json;
   res.json = function (bodyJson, ...args) {
@@ -42,10 +44,10 @@ app.use((req, res, next) => {
   await registerRoutes(app);
 
   if (process.env.NODE_ENV === "development") {
-    const { setupDevServer } = await import("./devSetup.js"); // ✅ Fixed here
+    const { setupDevServer } = await import("./devSetup.local.js");
     await setupDevServer(app);
   } else {
-    serveStatic(app);
+    setupStaticFiles(app);
   }
 
   const PORT = process.env.PORT || 5000;
