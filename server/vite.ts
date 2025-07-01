@@ -1,6 +1,5 @@
 // server/vite.ts
 import type { Express } from "express";
-import { createServer as createViteServer } from "vite";
 import { fileURLToPath } from "url";
 import path from "path";
 import serveStatic from "serve-static"; // ✅ ESM compatible
@@ -10,6 +9,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function setupVite(app: Express) {
+  // ✅ Dynamically import Vite only in development
+  const { createServer: createViteServer } = await import("vite");
+
   const vite = await createViteServer({
     server: {
       middlewareMode: true,
@@ -18,7 +20,7 @@ export async function setupVite(app: Express) {
     root: path.resolve(__dirname, ".."),
   });
 
-  app.use(vite.middlewares); // ✅ Only middleware, no listen()
+  app.use(vite.middlewares);
 }
 
 export function serveStatic(app: Express) {
